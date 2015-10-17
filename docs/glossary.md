@@ -20,9 +20,9 @@
 
 ## Data
 * `emit` - A function passed as the first argument to function given to the `expr` attribute of data primitives. When called, its arguments become data.
-* Length - The size of the data in the *x* direction, i.e. the number of rows.
-* Width - The size of the data in the *y* direction, i.e. the number of columns.
-* Height - The size of the data in the *z* direction, i.e. the number of stacks.
+* Length or Width - The size of the data in the *x* direction, i.e. the number of rows. (`array` and `interval` use length; others use width.)
+* Height - The size of the data in the *y* direction, i.e. the number of columns.
+* Depth - The size of the data in the *z* direction, i.e. the number of stacks.
 * Items - The size of the data in the *w* direction, i.e. the number of data points per spatial position. The number of times you call `emit` in the `expr` function.
 * Channels - How many numbers are associated with with data point. The number of arguments passed to `emit`.
 * History - The process of storing previous 1D or 2D data in an unused dimension.
