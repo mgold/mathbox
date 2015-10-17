@@ -13,6 +13,7 @@
 ## Functions on Selections
 * `bind("attributeName", function(t, d){ ... })` - A function on selectors to invoke the function every frame and set the attribute to its return value. The function's arguments are the time since page load (always?) and the time delta since the last frame, both in seconds.
 * `debug()` - Display a visual representation of all shader snippets, how they are wired, with the GLSL available on mouseover.
+* `end()` - Indicate that subsequent nodes are siblings rather than children of the current node. Also used to return the current selection to be assigned to a variable (??).
 * `get("attributeName")` - Get the current value of an attribute.
 * `inspect()` - Print (in the console) the DOM nodes they contain.
 * `select("selector")` - A function on `mathbox` that returns a selection of all the nodes matching the selector. Like CSS, the selector may be the name of a primitive (e.g. `"camera"`), an id (e.g. `"#colors"`), or a class (e.g. `".points"`).
