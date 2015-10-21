@@ -15,7 +15,8 @@
 * `debug()` - Display a visual representation of all shader snippets, how they are wired, with the GLSL available on mouseover.
 * `end()` - Indicate that subsequent nodes are siblings rather than children of the current node. Also used to return the current selection to be assigned to a variable (??).
 * `get("propName")` - Get the current value of an prop.
-* `inspect()` - Print (in the console) the DOM nodes they contain.
+* `inspect()` - Print (in the console) the DOM nodes in this selection.
+* `orig("propName")` - Return the value of the prop as passed in, i.e. without renormalization. Used mostly for pretty-printing.
 * `select("selector")` - A function on `mathbox` that returns a selection of all the nodes matching the selector. Like CSS, the selector may be the name of a primitive (e.g. `"camera"`), an id (e.g. `"#colors"`), or a class (e.g. `".points"`).
 * `set("propName", value)` - Set an prop to the value provided.
 
