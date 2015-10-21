@@ -22,7 +22,7 @@
 
 ## Data
 * `emit` - A function passed as the first argument to function given to the `expr` prop of data primitives. When called, its arguments become data.
-* Length or Width - The size of the data in the *x* direction, i.e. the number of rows. (`array` and `interval` use length; others use width.)
+* Width - The size of the data in the *x* direction, i.e. the number of rows.
 * Height - The size of the data in the *y* direction, i.e. the number of columns.
 * Depth - The size of the data in the *z* direction, i.e. the number of stacks.
 * Items - The size of the data in the *w* direction, i.e. the number of data points per spatial position. The number of times you call `emit` in the `expr` function.
