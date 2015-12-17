@@ -115,6 +115,7 @@
     }).swizzle({
       order: "xyz"
     }).transform({
+      id: "xyz",
       scale: dataRanges.slice(0,3).map(function(d,i){return i ? 1/d : 2/d}),
       position: dataScaledMinimums.slice(0,3).map(function(d,i){return i ? -d : -2*d}),
     }).point({
@@ -124,6 +125,7 @@
 
     // 2D marginals
     .transform({
+      id: "xy",
       scale: [1, 1, 0],
       position: [0, 0, dataMinimums[2]],
     }).point({
@@ -132,6 +134,7 @@
     }).end()
 
     .transform({
+      id: "xz",
       scale: [1, 0, 1],
       position: [0, dataMinimums[1], 0],
     }).point({
@@ -140,6 +143,7 @@
     }).end()
 
     .transform({
+      id: "yz",
       scale: [0, 1, 1],
       position: [dataMinimums[0], 0, 0],
     }).point({
@@ -149,6 +153,7 @@
 
     // 1D marginals
     .transform({
+      id: "x",
       position: [0, dataMaximums[1], dataMinimums[2]],
       scale: [1, 0.001, 0],
     }).repeat({
@@ -162,6 +167,7 @@
     }).end()
 
     .transform({
+      id: "y",
       position: [dataMaximums[0], 0, dataMinimums[2]],
       scale: [0.001, 1, 0],
     }).repeat({
@@ -175,6 +181,7 @@
     }).end()
 
     .transform({
+      id: "z",
       position: [dataMinimums[0], dataMaximums[1], 0],
       scale: [0, 0.001, 1],
     }).repeat({
@@ -208,16 +215,43 @@
       }
     }).dom({
       snap: false,
-      zoom: 1,
       pointerEvents: true,
     })
 
     function update(e, node){
       var axis = +node.getAttribute("data-axis");
       var feature = +e.target.value;
+
+      // Update our mutable state
       dims[axis] = feature;
+
+      // The problem: we need to update our view, but we only want to do it when an input changes,
+      // not every frame. This solution works, but moves this information away from where the nodes are defined.
+
+      // Update the swizzle
       var order = dims.map(function(d){return String.fromCharCode(120+(d == 3 ? -1 : d))}).join("");
-      mathbox.select("swizzle").set("order", order);
+      view.select("swizzle").set("order", order);
+
+      // Update all the transforms
+      view.select("transform#xyz").set({
+        scale: dims.map(function(dim,i){
+                  var range = dataRanges[dim];
+                  return i ? 1/range : 2/range;
+                }),
+        position: dims.map(function(dim,i){
+                    var scaledMin = dataScaledMinimums[dim];
+                    return i ? -scaledMin : -2*scaledMin;
+                  })
+      });
+
+      view.select("transform#xy").set("position", [0, 0, dataMinimums[dims[2]]]);
+      view.select("transform#xz").set("position", [0, dataMinimums[dims[1]], 0]);
+      view.select("transform#yz").set("position", [dataMinimums[dims[0]], 0, 0]);
+
+      view.select("transform#x").set("position", [0, dataMaximums[dims[1]], dataMinimums[dims[2]]]);
+      view.select("transform#y").set("position", [dataMaximums[dims[0]], 0, dataMinimums[dims[2]]]);
+      view.select("transform#z").set("position", [dataMinimums[dims[0]], dataMaximums[dims[1]], 0]);
+
     }
 
     view.select('#data').set('data', [
