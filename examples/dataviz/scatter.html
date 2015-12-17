@@ -42,6 +42,8 @@
       xyz: 0x654321, // brown
     }
 
+    var dims = [0,1,2];
+
     function interpolate(lo, hi, n){
       n--; // go to end of range
       var vals = [];
@@ -103,6 +105,7 @@
       divideY: 3,
     })
 
+    // Main data and black points
     view.array({
       items: 1,
       channels: 4,
@@ -119,6 +122,7 @@
       size: 12,
     })
 
+    // 2D marginals
     .transform({
       scale: [1, 1, 0],
       position: [0, 0, dataMinimums[2]],
@@ -143,6 +147,7 @@
       size: 7,
     }).end()
 
+    // 1D marginals
     .transform({
       position: [0, dataMaximums[1], dataMinimums[2]],
       scale: [1, 0.001, 0],
@@ -181,6 +186,39 @@
     }).vector({
       color: colors.z,
     }).end()
+
+    // HTML select elements
+    view.array({
+      live: false,
+      width: 3,
+      items: 1,
+      channels: 3,
+      data: [[1, 0, 1.1], [-0.1, 0.5, 1], [2.1, 0, 0.5]],
+    }).html({
+      width: 3,
+      height: 1,
+      depth: 1,
+      live: false,
+      expr: function (emit, el, i) {
+      emit(el("select", {style: {outline: "none"}, "data-axis": i, onchange: "update(event, this)"},
+          ["Sepal length", "Sepal width", "Petal length", "Petal width"].map(function(s, n){
+            return el("option", {value: n, selected: i==n}, s)
+          })
+        ))
+      }
+    }).dom({
+      snap: false,
+      zoom: 1,
+      pointerEvents: true,
+    })
+
+    function update(e, node){
+      var axis = +node.getAttribute("data-axis");
+      var feature = +e.target.value;
+      dims[axis] = feature;
+      var order = dims.map(function(d){return String.fromCharCode(120+(d == 3 ? -1 : d))}).join("");
+      mathbox.select("swizzle").set("order", order);
+    }
 
     view.select('#data').set('data', [
       // http://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
