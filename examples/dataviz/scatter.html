@@ -113,9 +113,10 @@
       id: 'data',
       // data: is set below
     }).swizzle({
-      order: "xyz"
+      order: "xyz",
+      classes: ["xyz"],
     }).transform({
-      id: "xyz",
+      classes: ["xyz"],
       scale: dataRanges.slice(0,3).map(function(d,i){return i ? 1/d : 2/d}),
       position: dataScaledMinimums.slice(0,3).map(function(d,i){return i ? -d : -2*d}),
     }).point({
@@ -155,13 +156,14 @@
     .transform({
       id: "x",
       position: [0, dataMaximums[1], dataMinimums[2]],
-      scale: [1, 0.001, 0],
+    }).swizzle({
+      order: "x"
     }).repeat({
       items: 2,
     }).spread({
       unit: "absolute",
       alignItems: "first",
-      items: [0, 100, 0, 0],
+      items: [0, 0.1, 0, 0],
     }).vector({
       color: colors.x,
     }).end()
@@ -169,13 +171,16 @@
     .transform({
       id: "y",
       position: [dataMaximums[0], 0, dataMinimums[2]],
-      scale: [0.001, 1, 0],
+    }).swizzle({
+      order: "y"
+    }).swizzle({
+      order: "yx"
     }).repeat({
       items: 2,
     }).spread({
       unit: "absolute",
       alignItems: "first",
-      items: [100, 0, 0, 0],
+      items: [0.1, 0, 0, 0],
     }).vector({
       color: colors.y,
     }).end()
@@ -183,13 +188,16 @@
     .transform({
       id: "z",
       position: [dataMinimums[0], dataMaximums[1], 0],
-      scale: [0, 0.001, 1],
+    }).swizzle({
+      order: "z"
+    }).swizzle({
+      order: "yyx"
     }).repeat({
       items: 2,
     }).spread({
       unit: "absolute",
       alignItems: "first",
-      items: [0, 100, 0, 0],
+      items: [0, 0.1, 0, 0],
     }).vector({
       color: colors.z,
     }).end()
@@ -230,10 +238,10 @@
 
       // Update the swizzle
       var order = dims.map(function(d){return String.fromCharCode(120+(d == 3 ? -1 : d))}).join("");
-      view.select("swizzle").set("order", order);
+      view.select("swizzle.xyz").set("order", order);
 
       // Update all the transforms
-      view.select("transform#xyz").set({
+      view.select("transform.xyz").set({
         scale: dims.map(function(dim,i){
                   var range = dataRanges[dim];
                   return i ? 1/range : 2/range;
